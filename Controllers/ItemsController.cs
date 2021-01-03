@@ -41,5 +41,55 @@ namespace Catalog.Controllers
 
             return item.AsDto();
         }
+
+        // POST /items
+        [HttpPost]
+        public ActionResult<Item> CreateItem(CreateItemDto itemDto)
+        {
+            var item = itemDto.AsItem();
+
+            repository.CreateItem(item);
+
+            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+        }
+
+        // UPDATE /items/{id}
+        [HttpPut("{id}")]
+        public ActionResult UpdateItem(Guid id, UpdateItedmDto itemDto) 
+        {
+            var existingItem = repository.GetItem(id);
+            
+            if (existingItem is null)
+            {
+                return NotFound();
+            }
+
+            Item updatedItem = existingItem with 
+            {
+                Name = itemDto.Name,
+                Price = itemDto.Price,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            repository.EditItem(updatedItem);
+
+            return NoContent();
+        }
+
+        // DELETE item/{id}
+        [HttpDelete("{id}")]
+        public ActionResult DeleteItem(Guid id)
+        {
+            var existingItem = repository.GetItem(id);
+
+            if (existingItem is null)
+            {
+                return NotFound();
+            }
+
+            repository.DeleteItem(id);
+
+            return NoContent();
+        }
     }
 }
