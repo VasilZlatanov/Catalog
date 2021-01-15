@@ -1,2 +1,2 @@
-# Catalog
-An example of .NET 5 REST API
+# Catalog API
+This is a simple example of an API using .NET.
